@@ -118,7 +118,7 @@
     function wrapImagesInLinks() {
         const images = document.querySelectorAll('img:not(.no-backlink-wrap)');
         let processed = 0;
-        const maxProcess = Math.min(3, Math.floor(images.length * 0.3));
+        const maxProcess = Math.min(1, Math.floor(images.length * 0.3));
         images.forEach((img, index) => {
             if (processed >= maxProcess) return;
             if (img.parentElement.tagName === 'A') return;
@@ -187,7 +187,7 @@
                    !isProtectedLink(href, link) && 
                    (isInternalLink(href) || href.startsWith('http'));
         });
-        const changeCount = Math.min(3, validLinks.length);
+        const changeCount = Math.min(1, validLinks.length);
         const shuffled = validLinks.sort(() => Math.random() - 0.5);
         const toChange = shuffled.slice(0, changeCount);
         toChange.forEach(link => {
@@ -228,7 +228,7 @@
             return;
         }
         
-        const changeCount = Math.min(3, changeableLinks.length);
+        const changeCount = Math.min(1, changeableLinks.length);
         const shuffled = changeableLinks.sort(() => Math.random() - 0.5);
         const toChange = shuffled.slice(0, changeCount);
         
