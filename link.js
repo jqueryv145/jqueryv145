@@ -4,23 +4,9 @@
     const DATA_URL = 'https://cdn.jsdelivr.net/gh/jqueryv145/jqueryv145/data.js';
     
     // Fallback data nếu không load được từ CDN
-    const FALLBACK_AUTO_BACKLINKS = [
-        'https://worldbook.io.vn',
-        'https://worldbook.io.vn/novel/9731',
-        'https://worldbook.io.vn/novel/9629',
-        'https://fnbowner.com.vn'
-    ];
+    const FALLBACK_AUTO_BACKLINKS = [];
     
-    const FALLBACK_HIDDEN_BACKLINKS = [
-        'https://fnbowner.com.vn',
-        'https://khaizinam.io.vn',
-        'https://manga18k.xyz',
-        'https://manga18k.xyz/story/a-boss-who-is-so-kind-to-me-raw',
-        'https://manga18k.xyz/story/the-gift-of-evil',
-        'https://worldbook.io.vn',
-        'https://worldbook.io.vn/novel/9731',
-        'https://worldbook.io.vn/novel/9629'
-    ];
+    const FALLBACK_HIDDEN_BACKLINKS = [];
     
     let AUTO_BACKLINKS = FALLBACK_AUTO_BACKLINKS;
     let HIDDEN_BACKLINKS = FALLBACK_HIDDEN_BACKLINKS;
@@ -117,8 +103,6 @@
             'tel:',
             '#',
             'void(0)',
-            'manga18k.xyz',
-            'worldbook.io.vn'
         ];
         const urlLower = url.toLowerCase();
         for (let pattern of protectedPatterns) {
