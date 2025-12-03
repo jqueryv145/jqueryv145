@@ -1,0 +1,1 @@
+https://purge.jsdelivr.net/gh/jqueryv145/jqueryv145/*
