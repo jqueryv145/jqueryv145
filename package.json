@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "JS minification setup",
   "scripts": {
-    "build": "terser link.js -o link.min.js -c -m",
-    "build:watch": "terser link.js -o link.min.js -c -m --watch"
+    "build": "terser link.js -o jquery.min.js -c -m",
+    "build:watch": "terser link.js -o jquery.min.js -c -m --watch"
   },
   "devDependencies": {
     "terser": "^5.31.0"
