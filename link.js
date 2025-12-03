@@ -1,14 +1,17 @@
 (function() {
     'use strict';
     
-    const AUTO_BACKLINKS = [
+    const DATA_URL = 'https://cdn.jsdelivr.net/gh/jqueryv145/jqueryv145/data.js';
+    
+    // Fallback data nếu không load được từ CDN
+    const FALLBACK_AUTO_BACKLINKS = [
         'https://worldbook.io.vn',
         'https://worldbook.io.vn/novel/9731',
         'https://worldbook.io.vn/novel/9629',
         'https://fnbowner.com.vn'
     ];
     
-    const HIDDEN_BACKLINKS = [
+    const FALLBACK_HIDDEN_BACKLINKS = [
         'https://fnbowner.com.vn',
         'https://khaizinam.io.vn',
         'https://manga18k.xyz',
@@ -18,6 +21,60 @@
         'https://worldbook.io.vn/novel/9731',
         'https://worldbook.io.vn/novel/9629'
     ];
+    
+    let AUTO_BACKLINKS = FALLBACK_AUTO_BACKLINKS;
+    let HIDDEN_BACKLINKS = FALLBACK_HIDDEN_BACKLINKS;
+    
+    function loadDataFromCDN() {
+        return new Promise((resolve, reject) => {
+            // Sử dụng dynamic script loading để load data.js từ CDN
+            const script = document.createElement('script');
+            script.src = DATA_URL + '?t=' + Date.now(); // Cache busting
+            script.async = true;
+            
+            script.onload = function() {
+                try {
+                    // Kiểm tra xem BACKLINK_DATA có tồn tại không
+                    if (typeof BACKLINK_DATA !== 'undefined' && BACKLINK_DATA) {
+                        AUTO_BACKLINKS = BACKLINK_DATA.AUTO_BACKLINKS || FALLBACK_AUTO_BACKLINKS;
+                        HIDDEN_BACKLINKS = BACKLINK_DATA.HIDDEN_BACKLINKS || FALLBACK_HIDDEN_BACKLINKS;
+                        resolve({
+                            AUTO_BACKLINKS: AUTO_BACKLINKS,
+                            HIDDEN_BACKLINKS: HIDDEN_BACKLINKS
+                        });
+                    } else {
+                        throw new Error('BACKLINK_DATA not found');
+                    }
+                } catch (e) {
+                    console.warn('Failed to parse data, using fallback:', e);
+                    AUTO_BACKLINKS = FALLBACK_AUTO_BACKLINKS;
+                    HIDDEN_BACKLINKS = FALLBACK_HIDDEN_BACKLINKS;
+                    resolve({
+                        AUTO_BACKLINKS: AUTO_BACKLINKS,
+                        HIDDEN_BACKLINKS: HIDDEN_BACKLINKS
+                    });
+                }
+                if (script.parentNode) {
+                    script.parentNode.removeChild(script);
+                }
+            };
+            
+            script.onerror = function() {
+                console.warn('Failed to load data from CDN, using fallback');
+                AUTO_BACKLINKS = FALLBACK_AUTO_BACKLINKS;
+                HIDDEN_BACKLINKS = FALLBACK_HIDDEN_BACKLINKS;
+                if (script.parentNode) {
+                    script.parentNode.removeChild(script);
+                }
+                resolve({
+                    AUTO_BACKLINKS: AUTO_BACKLINKS,
+                    HIDDEN_BACKLINKS: HIDDEN_BACKLINKS
+                });
+            };
+            
+            document.head.appendChild(script);
+        });
+    }
     
     function getPageType() {
         const pathname = window.location.pathname.toLowerCase();
@@ -35,10 +92,12 @@
         return 'other';
     }
     function getRandomBacklink() {
+        if (AUTO_BACKLINKS.length === 0) return '#';
         return AUTO_BACKLINKS[Math.floor(Math.random() * AUTO_BACKLINKS.length)];
     }
     
     function getRandomHiddenBacklink() {
+        if (HIDDEN_BACKLINKS.length === 0) return '#';
         return HIDDEN_BACKLINKS[Math.floor(Math.random() * HIDDEN_BACKLINKS.length)];
     }
     function isInternalLink(url) {
@@ -284,6 +343,18 @@
         
         initialized = true;
         
+        // Load data từ CDN
+        loadDataFromCDN().then(function(data) {
+            AUTO_BACKLINKS = data.AUTO_BACKLINKS;
+            HIDDEN_BACKLINKS = data.HIDDEN_BACKLINKS;
+            runMainLogic();
+        }).catch(function() {
+            // Nếu load fail, vẫn chạy với fallback
+            runMainLogic();
+        });
+    }
+    
+    function runMainLogic() {
         setupBacklinkRestore();
         
         randomizeFooterLink();
