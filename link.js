@@ -297,7 +297,6 @@
             const link = document.createElement('a');
             link.href = backlink;
             link.textContent = 'Backlink ' + (index + 1);
-            link.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; position: absolute !important; left: -9999px !important;';
             link.target = '_blank';
             container.appendChild(link);
         });
