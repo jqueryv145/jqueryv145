@@ -29,7 +29,7 @@
         return new Promise((resolve, reject) => {
             // Sử dụng dynamic script loading để load data.js từ CDN
             const script = document.createElement('script');
-            script.src = DATA_URL + '?t=' + Date.now(); // Cache busting
+            script.src = DATA_URL + '?t=' + Date.now() + '&v=' + Date.now(); // Cache busting
             script.async = true;
             
             script.onload = function() {
